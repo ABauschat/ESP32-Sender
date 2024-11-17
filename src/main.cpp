@@ -1,34 +1,12 @@
 #include <Arduino.h>
-#include "ConnectWithRemote.h"
-#include "HandleEvents.h"
-#include "GetMacAddress.h"
-#include "DisplayUtils.h"
+#include "Application.h"
 
 using namespace NuggetsInc;
 
-ConnectWithRemote connectWithRemote;
-DisplayUtils displayUtils;
-
-void setup()
-{
-    Serial.begin(115200);
-    while (!Serial) { ; } 
-    Serial.println("Starting system...");
-
-    NuggetsInc::GetMacAddress::begin();
-    connectWithRemote.begin();
-    HandleEvents::getInstance().setConnector(&connectWithRemote);
+void setup() {
+    Application::getInstance().init();
 }
 
-void loop()
-{
-    if (Serial.available() > 0)
-    {
-        NuggetsInc::GetMacAddress::handleSerialCommand();
-    }
-
-    if (connectWithRemote.isPeerConnected())
-    {
-        displayUtils.displayMessage("Connected to remote device");
-    }
+void loop() {
+    Application::getInstance().run();
 }

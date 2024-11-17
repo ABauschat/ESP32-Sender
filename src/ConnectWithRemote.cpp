@@ -122,6 +122,7 @@ namespace NuggetsInc
             if (strcmp(receivedMessage.messageType, "command") == 0)
             {
                 HandleEvents::getInstance().processCommand(receivedMessage.command, receivedMessage.data);
+                Serial.println("Received command message");
             }
             else
             {
