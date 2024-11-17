@@ -1,10 +1,9 @@
 #include "ConnectWithRemote.h"
 #include "HandleEvents.h"
-#include <esp_wifi.h> // Include ESP-IDF WiFi header
+#include <esp_wifi.h> 
 
 namespace NuggetsInc
 {
-    // Initialize the static activeInstance pointer
     ConnectWithRemote *ConnectWithRemote::activeInstance = nullptr;
 
     ConnectWithRemote::ConnectWithRemote()
@@ -17,24 +16,20 @@ namespace NuggetsInc
     {
     }
 
-    // Begin ESP-NOW communication
     void ConnectWithRemote::begin()
     {
         activeInstance = this;
 
-        // Initialize WiFi in Station mode
         WiFi.mode(WIFI_STA);
         WiFi.disconnect();
         delay(100);
 
-        // Set WiFi channel using ESP-IDF function
         if (esp_wifi_set_channel(1, WIFI_SECOND_CHAN_NONE) != ESP_OK)
         {
             Serial.println("Failed to set WiFi channel");
             return;
         }
 
-        // Initialize ESP-NOW
         if (esp_now_init() != ESP_OK)
         {
             Serial.println("ESP-NOW initialization failed, retrying...");
@@ -52,13 +47,11 @@ namespace NuggetsInc
             }
         }
 
-        // Register callbacks
         esp_now_register_send_cb(onDataSentCallback);
         esp_now_register_recv_cb(onDataRecvCallback);
         Serial.println("ESP-NOW initialized successfully");
     }
 
-    // Send data via ESP-NOW
     void ConnectWithRemote::sendData(const uint8_t *data, size_t len)
     {
         if (!peerConnected)
@@ -76,12 +69,11 @@ namespace NuggetsInc
         esp_now_send(peerMAC, data, len);
     }
 
-    // Getter for the active instance
-    ConnectWithRemote* ConnectWithRemote::getActiveInstance() {
+    ConnectWithRemote *ConnectWithRemote::getActiveInstance()
+    {
         return activeInstance;
     }
 
-    // Callback when data is sent
     void ConnectWithRemote::onDataSentCallback(const uint8_t *mac_addr, esp_now_send_status_t status)
     {
         if (activeInstance)
@@ -90,7 +82,6 @@ namespace NuggetsInc
         }
     }
 
-    // Callback when data is received
     void ConnectWithRemote::onDataRecvCallback(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
     {
         if (activeInstance)
@@ -99,7 +90,6 @@ namespace NuggetsInc
         }
     }
 
-    // Handle data sent callback
     void ConnectWithRemote::handleOnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
     {
         if (status == ESP_NOW_SEND_SUCCESS)
@@ -112,7 +102,6 @@ namespace NuggetsInc
         }
     }
 
-    // Handle data received callback
     void ConnectWithRemote::handleOnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
     {
         if (!peerConnected)
@@ -126,12 +115,10 @@ namespace NuggetsInc
             HandleEvents::struct_message receivedMessage;
             memcpy(&receivedMessage, incomingData, sizeof(receivedMessage));
 
-            // Ensure null-termination
             receivedMessage.messageType[sizeof(receivedMessage.messageType) - 1] = '\0';
             receivedMessage.command[sizeof(receivedMessage.command) - 1] = '\0';
             receivedMessage.data[sizeof(receivedMessage.data) - 1] = '\0';
 
-            // Check message type
             if (strcmp(receivedMessage.messageType, "command") == 0)
             {
                 HandleEvents::getInstance().processCommand(receivedMessage.command, receivedMessage.data);
@@ -141,13 +128,8 @@ namespace NuggetsInc
                 Serial.println("Received unknown message type");
             }
         }
-        else
-        {
-            Serial.println("Received incomplete message");
-        }
     }
 
-    // Add a peer to ESP-NOW
     void ConnectWithRemote::addPeer(const uint8_t *mac_addr)
     {
         if (!esp_now_is_peer_exist(mac_addr))

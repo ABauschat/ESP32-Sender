@@ -21,7 +21,7 @@ void DisplayUtils::sendCommand(const char* command, const char* data) {
     }
     else
     {
-        message.data[0] = '\0'; // No data
+        message.data[0] = '\0'; 
     }
 
     ConnectWithRemote* connector = ConnectWithRemote::getActiveInstance();

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <vector>
 #include <String.h>
-#include "HandleEvents.h" // To access struct_message
+#include "HandleEvents.h" 
 
 namespace NuggetsInc
 {
