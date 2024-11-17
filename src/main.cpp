@@ -9,13 +9,14 @@ ConnectWithRemote connectWithRemote;
 
 void setup()
 {
-    Serial.println("Sender Device Starting...");
-    // Initialize serial communication
-    NuggetsInc::GetMacAddress::begin();
+    Serial.begin(115200);
+    while (!Serial) { ; }
 
-    // Initialize ESP-NOW
+    NuggetsInc::GetMacAddress::begin();
     connectWithRemote.begin();
     HandleEvents::getInstance().setConnector(&connectWithRemote);
+
+    Serial.println("Setup complete");
 }
 
 void loop()

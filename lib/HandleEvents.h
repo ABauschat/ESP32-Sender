@@ -1,4 +1,3 @@
-//Device Sender 
 #ifndef HANDLE_EVENTS_H
 #define HANDLE_EVENTS_H
 
@@ -17,7 +16,7 @@ namespace NuggetsInc
         struct struct_message
         {
             char messageType[10];
-            char command[20]; 
+            char command[20];
         };
 
     private:
@@ -26,6 +25,7 @@ namespace NuggetsInc
 
         HandleEvents(const HandleEvents&) = delete;
         HandleEvents& operator=(const HandleEvents&) = delete;
+
         void executeCommand(const char* command);
 
         ConnectWithRemote* connectWithRemote;
