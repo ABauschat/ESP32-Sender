@@ -34,32 +34,26 @@ namespace NuggetsInc
 
         if (strcmp(command, "MOVE_UP") == 0)
         {
-            Serial.println("Executing MOVE_UP");
             strcpy(response.command, "MOVE_UP_DONE");
         }
         else if (strcmp(command, "MOVE_DOWN") == 0)
         {
-            Serial.println("Executing MOVE_DOWN");
             strcpy(response.command, "MOVE_DOWN_DONE");
         }
         else if (strcmp(command, "MOVE_LEFT") == 0)
         {
-            Serial.println("Executing MOVE_LEFT");
             strcpy(response.command, "MOVE_LEFT_DONE");
         }
         else if (strcmp(command, "MOVE_RIGHT") == 0)
         {
-            Serial.println("Executing MOVE_RIGHT");
             strcpy(response.command, "MOVE_RIGHT_DONE");
         }
         else if (strcmp(command, "SELECT") == 0)
         {
-            Serial.println("Executing SELECT");
             strcpy(response.command, "SELECT_DONE");
         }
         else
         {
-            Serial.println("Received unknown command");
             strcpy(response.command, "UNKNOWN_COMMAND");
         }
 

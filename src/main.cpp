@@ -15,8 +15,6 @@ void setup()
     NuggetsInc::GetMacAddress::begin();
     connectWithRemote.begin();
     HandleEvents::getInstance().setConnector(&connectWithRemote);
-
-    Serial.println("Setup complete");
 }
 
 void loop()
