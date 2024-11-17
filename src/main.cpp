@@ -5,7 +5,6 @@
 
 using namespace NuggetsInc;
 
-// Create instances of ConnectWithRemote and HandleEvents
 ConnectWithRemote connectWithRemote;
 
 void setup()
@@ -14,10 +13,7 @@ void setup()
 
     Serial.println("Device 2 (Actuator) Starting...");
 
-    // Initialize ESP-NOW communication
     connectWithRemote.begin();
-
-    // Set the connector for HandleEvents
     HandleEvents::getInstance().setConnector(&connectWithRemote);
 
     Serial.println("Device 2 Initialized and Ready");

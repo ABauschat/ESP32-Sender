@@ -3,26 +3,23 @@
 
 namespace NuggetsInc
 {
-    // Initialize the static pointer to nullptr
     ConnectWithRemote* ConnectWithRemote::activeInstance = nullptr;
 
     ConnectWithRemote::ConnectWithRemote()
         : peerConnected(false)
     {
-        memset(peerMAC, 0xFF, sizeof(peerMAC)); // Initialize to all FF
+        // Set All to all FF
+        memset(peerMAC, 0xFF, sizeof(peerMAC)); 
     }
 
     ConnectWithRemote::~ConnectWithRemote()
     {
-        // Cleanup if necessary
     }
 
     void ConnectWithRemote::begin()
     {
-        // Set the static instance pointer to this object
         activeInstance = this;
 
-        // Initialize ESP-NOW
         WiFi.mode(WIFI_STA);
         WiFi.disconnect();
 
@@ -32,7 +29,6 @@ namespace NuggetsInc
             return;
         }
 
-        // Register send and receive callbacks
         esp_now_register_send_cb(onDataSentCallback);
         esp_now_register_recv_cb(onDataRecvCallback);
 
@@ -58,7 +54,6 @@ namespace NuggetsInc
         }
     }
 
-    // Static send callback
     void ConnectWithRemote::onDataSentCallback(const uint8_t *mac_addr, esp_now_send_status_t status)
     {
         if (activeInstance)
@@ -67,7 +62,6 @@ namespace NuggetsInc
         }
     }
 
-    // Static receive callback
     void ConnectWithRemote::onDataRecvCallback(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
     {
         if (activeInstance)
@@ -76,14 +70,12 @@ namespace NuggetsInc
         }
     }
 
-    // Instance send callback handler
     void ConnectWithRemote::handleOnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
     {
         String result = (status == ESP_NOW_SEND_SUCCESS) ? "Send success" : "Send failed";
         Serial.println(result);
     }
 
-    // Instance receive callback handler
     void ConnectWithRemote::handleOnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
     {
         if (!peerConnected)
@@ -101,7 +93,6 @@ namespace NuggetsInc
             // sendData((uint8_t*)&ack, sizeof(ack));
         }
 
-        // Process incoming data
         if (len >= sizeof(HandleEvents::struct_message))
         {
             HandleEvents::struct_message receivedMessage;
@@ -112,12 +103,10 @@ namespace NuggetsInc
                 Serial.print("Received command: ");
                 Serial.println(receivedMessage.command);
 
-                // Pass the command to HandleEvents
                 HandleEvents::getInstance().processCommand(receivedMessage.command);
             }
             else if (strcmp(receivedMessage.messageType, "response") == 0)
             {
-                // Handle responses if necessary
                 Serial.print("Received response: ");
                 Serial.println(receivedMessage.command);
             }

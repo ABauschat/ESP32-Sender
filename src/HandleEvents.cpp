@@ -2,7 +2,6 @@
 
 namespace NuggetsInc
 {
-    // Initialize the singleton instance
     HandleEvents& HandleEvents::getInstance()
     {
         static HandleEvents instance;
@@ -33,9 +32,7 @@ namespace NuggetsInc
         if (strcmp(command, "MOVE_UP") == 0)
         {
             Serial.println("Executing MOVE_UP");
-            // TODO: Implement actuator control for MOVE_UP
 
-            // Send response back to Controller
             struct_message response;
             strcpy(response.messageType, "response");
             strcpy(response.command, "MOVE_UP_DONE");
@@ -47,7 +44,6 @@ namespace NuggetsInc
         else if (strcmp(command, "MOVE_DOWN") == 0)
         {
             Serial.println("Executing MOVE_DOWN");
-            // TODO: Implement actuator control for MOVE_DOWN
 
             struct_message response;
             strcpy(response.messageType, "response");
@@ -60,7 +56,6 @@ namespace NuggetsInc
         else if (strcmp(command, "MOVE_LEFT") == 0)
         {
             Serial.println("Executing MOVE_LEFT");
-            // TODO: Implement actuator control for MOVE_LEFT
 
             struct_message response;
             strcpy(response.messageType, "response");
@@ -73,7 +68,6 @@ namespace NuggetsInc
         else if (strcmp(command, "MOVE_RIGHT") == 0)
         {
             Serial.println("Executing MOVE_RIGHT");
-            // TODO: Implement actuator control for MOVE_RIGHT
 
             struct_message response;
             strcpy(response.messageType, "response");
@@ -86,7 +80,6 @@ namespace NuggetsInc
         else if (strcmp(command, "SELECT") == 0)
         {
             Serial.println("Executing SELECT");
-            // TODO: Implement actuator control for SELECT
 
             struct_message response;
             strcpy(response.messageType, "response");
