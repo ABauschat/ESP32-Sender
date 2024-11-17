@@ -31,7 +31,7 @@ namespace NuggetsInc
     {
         if (strcmp(command, "MOVE_UP") == 0)
         {
-
+            
         }
         else if (strcmp(command, "MOVE_DOWN") == 0)
         {

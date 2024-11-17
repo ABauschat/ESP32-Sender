@@ -29,6 +29,6 @@ void loop()
 
     if (connectWithRemote.isPeerConnected())
     {
-        //Peer is connected
+        displayUtils.displayMessage("Connected to remote device");
     }
 }
