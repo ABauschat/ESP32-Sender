@@ -13,8 +13,6 @@ Application::Application() : currentState(nullptr) {}
 
 void Application::init() {
     Device::getInstance().init();
-
-    changeState(StateFactory::createState(MENU_STATE));
 }
 
 void Application::run() {

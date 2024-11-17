@@ -9,6 +9,8 @@ DisplayUtils::DisplayUtils() {}
 DisplayUtils::~DisplayUtils() {}
 
 void DisplayUtils::sendCommand(const char* command, const char* data) { 
+    delay(75);
+
     HandleEvents::struct_message message;
     strcpy(message.messageType, "command");
     strncpy(message.command, command, sizeof(message.command) - 1);

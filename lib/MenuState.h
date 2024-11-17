@@ -27,7 +27,6 @@ private:
     int menuIndex;
 
     DisplayUtils* displayUtils;
-    ConnectWithRemote connectWithRemote;
 };
 
 } // namespace NuggetsInc

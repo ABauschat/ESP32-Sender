@@ -5,10 +5,6 @@
 #include "Application.h"
 #include "Colors.h"
 #include <Arduino.h>
-#include "ConnectWithRemote.h"
-#include "HandleEvents.h"
-#include "GetMacAddress.h"
-#include "DisplayUtils.h"
 
 namespace NuggetsInc {
 
@@ -26,32 +22,29 @@ MenuState::~MenuState() {
 }
 
 void MenuState::onEnter() {
-    Serial.begin(115200);
-    while (!Serial) { ; } 
-    Serial.println("Starting system...");
-
-    NuggetsInc::GetMacAddress::begin();
-    connectWithRemote.begin();
-    HandleEvents::getInstance().setConnector(&connectWithRemote);
+    displayMenu();
 }
 
 void MenuState::onExit() {
-
 }
 
 void MenuState::update() {
-    if (Serial.available() > 0)
-    {
-        NuggetsInc::GetMacAddress::handleSerialCommand();
-    }
 }
 
 void MenuState::displayMenu() {
-   
+    displayUtils->fillScreen(COLOR_BLACK);
+    displayUtils->setTextColor(0xFFFF);
+    displayUtils->setTextSize(2);
+    displayUtils->setCursor(0, 0);
+    displayUtils->println("Menu");
+    displayUtils->setTextSize(1);
+    for (int i = 0; i < menuItems; i++) {
+        displayUtils->setCursor(0, 20 + (i * 10));
+        displayUtils->println(menu[i]);
+    }
 }
 
 void MenuState::executeSelection() {
-   
 }
 
 } // namespace NuggetsInc

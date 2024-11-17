@@ -1,6 +1,9 @@
 #include "ConnectWithRemote.h"
 #include "HandleEvents.h"
 #include <esp_wifi.h> 
+#include "Application.h"
+#include "StateFactory.h"
+
 
 namespace NuggetsInc
 {
@@ -104,12 +107,6 @@ namespace NuggetsInc
 
     void ConnectWithRemote::handleOnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
     {
-        if (!peerConnected)
-        {
-            memcpy(peerMAC, mac_addr, 6);
-            addPeer(mac_addr);
-        }
-
         if (len >= sizeof(HandleEvents::struct_message))
         {
             HandleEvents::struct_message receivedMessage;
@@ -128,6 +125,16 @@ namespace NuggetsInc
             {
                 Serial.println("Received unknown message type");
             }
+        }
+
+
+        if (!peerConnected)
+        {
+            memcpy(peerMAC, mac_addr, 6);
+            addPeer(mac_addr);
+            
+            Application& app = Application::getInstance();
+            app.changeState(StateFactory::createState(MENU_STATE));
         }
     }
 
