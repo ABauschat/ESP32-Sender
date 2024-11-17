@@ -1,3 +1,4 @@
+//Device Sender 
 #ifndef HANDLE_EVENTS_H
 #define HANDLE_EVENTS_H
 
@@ -22,7 +23,7 @@ namespace NuggetsInc
     private:
         HandleEvents();
         ~HandleEvents();
-        
+
         HandleEvents(const HandleEvents&) = delete;
         HandleEvents& operator=(const HandleEvents&) = delete;
         void executeCommand(const char* command);

@@ -1,7 +1,8 @@
+//Device Sender 
 #include "HandleEvents.h"
 
 namespace NuggetsInc
-{
+{ 
     HandleEvents& HandleEvents::getInstance()
     {
         static HandleEvents instance;
