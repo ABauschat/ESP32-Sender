@@ -19,17 +19,15 @@ public:
     void update() override;
 
 private:
-    // Optionally keep this if you plan to use full screen redraws in certain scenarios
-    // void displayMenu();
 
     void executeSelection();
     void redrawMenuChange();
-    void redrawLine(int index, bool isSelected); // New function to redraw a specific line
+    void redrawLine(int index, bool isSelected); 
 
     static const int menuItems = 4;
     String menu[menuItems];
     int menuIndex;
-    int previousMenuIndex; // New member to track the previously selected menu index
+    int previousMenuIndex; 
 
     DisplayUtils* displayUtils;
 };
