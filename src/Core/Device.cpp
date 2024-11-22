@@ -7,7 +7,9 @@ Device& Device::getInstance() {
     return instance;
 }
 
-Device::Device() {}
+Device::Device() {
+    
+}
 
 void Device::init() {
 

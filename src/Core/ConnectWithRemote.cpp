@@ -163,4 +163,8 @@ namespace NuggetsInc
             peerConnected = true;
         }
     }
+
+      bool ConnectWithRemote::isPeerConnected() {
+        return peerConnected;
+      }
 }

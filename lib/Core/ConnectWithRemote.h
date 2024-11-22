@@ -17,7 +17,7 @@ namespace NuggetsInc
 
         void begin();
         void sendData(const uint8_t *data, size_t len);
-        bool isPeerConnected() const { return peerConnected; }
+        bool isPeerConnected();
         static ConnectWithRemote* getActiveInstance();
 
     private:
