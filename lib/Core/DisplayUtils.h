@@ -27,6 +27,9 @@ namespace NuggetsInc
         void fillScreen(uint16_t color);
         void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
         void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+
+        int ScreenWidth = 536;
+        int ScreenHeight = 220;
         
     private:
         void sendCommand(const char *command, const char *data = nullptr);
