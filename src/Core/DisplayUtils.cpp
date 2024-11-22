@@ -1,17 +1,16 @@
+// DisplayUtils.cpp
 #include "DisplayUtils.h"
 #include "ConnectWithRemote.h"
 #include "HandleEvents.h"
+#include "MessageTypes.h"
 
 namespace NuggetsInc {
 
 DisplayUtils::DisplayUtils() {}
-
 DisplayUtils::~DisplayUtils() {}
 
 void DisplayUtils::sendCommand(const char* command, const char* data) { 
-    delay(75);
-
-    HandleEvents::struct_message message;
+    struct_message message;
     strcpy(message.messageType, "command");
     strncpy(message.command, command, sizeof(message.command) - 1);
     message.command[sizeof(message.command) - 1] = '\0'; 
@@ -28,17 +27,23 @@ void DisplayUtils::sendCommand(const char* command, const char* data) {
 
     ConnectWithRemote* connector = ConnectWithRemote::getActiveInstance();
     if (connector && connector->isPeerConnected()) {
-        connector->sendData(reinterpret_cast<const uint8_t*>(&message), sizeof(message));
-        Serial.print("Sent command: ");
-        Serial.print(command);
-        if (data != nullptr)
+        if (connector->sendDataBlocking(message))
         {
-            Serial.print(" with data: ");
-            Serial.println(data);
+            Serial.print("Sent command: ");
+            Serial.print(command);
+            if (data != nullptr)
+            {
+                Serial.print(" with data: ");
+                Serial.println(data);
+            }
+            else
+            {
+                Serial.println();
+            }
         }
         else
         {
-            Serial.println();
+            Serial.println("Failed to send command after retries");
         }
     }
     else {

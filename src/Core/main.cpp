@@ -1,24 +1,24 @@
+// main.cpp
 #include <Arduino.h>
 #include "Application.h"
 #include "GetMacAddress.h"
 #include "ConnectWithRemote.h"
 #include "HandleEvents.h"
-#include "GetMacAddress.h"
 #include "DisplayUtils.h"
+#include "StateFactory.h"
 
 using namespace NuggetsInc;
 
-DisplayUtils* displayUtils;
 ConnectWithRemote connectWithRemote;
 
 void setup() {
     Serial.begin(115200);
     while (!Serial) { ; } 
-    Serial.println("Starting system...");
     NuggetsInc::GetMacAddress::begin();
     connectWithRemote.begin();
-    HandleEvents::getInstance().setConnector(&connectWithRemote);
+    NuggetsInc::HandleEvents::getInstance().setConnector(&connectWithRemote);
     Application::getInstance().init();
+    Application::getInstance().changeState(StateFactory::createState(StateType::MENU_STATE));
 }
 
 void loop() {
@@ -27,5 +27,12 @@ void loop() {
         NuggetsInc::GetMacAddress::handleSerialCommand();
     }
 
+    if (connectWithRemote.shouldStartMainMenu) {
+        connectWithRemote.shouldStartMainMenu = false; 
+        Application::getInstance().changeState(StateFactory::createState(StateType::MENU_STATE));
+    }
+
     Application::getInstance().run();
+
+    yield();
 }

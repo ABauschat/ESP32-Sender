@@ -1,34 +1,52 @@
+// HandleEvents.h
 #ifndef HANDLE_EVENTS_H
 #define HANDLE_EVENTS_H
 
 #include <Arduino.h>
-#include "ConnectWithRemote.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/queue.h>
 
-namespace NuggetsInc
+namespace NuggetsInc {
+
+enum class EventType {
+    MOVE_UP,
+    MOVE_DOWN,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    SELECT
+};
+
+struct Event {
+    EventType type;
+};
+
+class ConnectWithRemote; // Forward declaration
+
+class HandleEvents
 {
-    class HandleEvents
-    {
-    public:
-        static HandleEvents& getInstance();
-        void setConnector(ConnectWithRemote* connector);
-        void processCommand(const char* command, const char* data = nullptr);
+public:
+    static HandleEvents& getInstance();
 
-        struct struct_message
-        {
-            char messageType[10]; 
-            char command[20];    
-            char data[50];      
-        };
+    void processCommand(const char* command, const char* data);
 
-    private:
-        HandleEvents();
-        ~HandleEvents();
+    void setConnector(ConnectWithRemote* connector);
 
-        HandleEvents(const HandleEvents&) = delete;
-        HandleEvents& operator=(const HandleEvents&) = delete;
-        void executeCommand(const char* command, const char* data);
-        ConnectWithRemote* connectWithRemote;
-    };
-}
+    QueueHandle_t getEventQueue();
+
+    void clearEvents();
+
+private:
+    HandleEvents();
+    ~HandleEvents();
+    HandleEvents(const HandleEvents&) = delete;
+    HandleEvents& operator=(const HandleEvents&) = delete;
+
+    void executeCommand(const char* command, const char* data);
+
+    ConnectWithRemote* connectWithRemote;
+    QueueHandle_t eventQueue;
+};
+
+} // namespace NuggetsInc
 
 #endif // HANDLE_EVENTS_H
