@@ -64,6 +64,10 @@ void HandleEvents::executeCommand(const char* command, const char* data)
     {
         event.type = EventType::SELECT;
     }
+    else if (strcmp(command, "BACK") == 0)
+    {
+        event.type = EventType::BACK;
+    }
     else
     {
         Serial.println("Unknown command received");

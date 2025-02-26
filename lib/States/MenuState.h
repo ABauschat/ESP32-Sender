@@ -1,4 +1,3 @@
-// MenuState.h
 #ifndef MENUSTATE_H
 #define MENUSTATE_H
 
@@ -6,6 +5,7 @@
 #include "DisplayUtils.h"
 #include "HandleEvents.h"
 #include <Arduino.h>
+#include "HX711.h"   // Include the HX711 library
 
 namespace NuggetsInc {
 
@@ -19,17 +19,26 @@ public:
     void update() override;
 
 private:
-
     void executeSelection();
     void redrawMenuChange();
-    void redrawLine(int index, bool isSelected); 
+    void redrawLine(int index, bool isSelected);
 
-    static const int menuItems = 4;
+    // After a selection completes, this resets the scale and redraws the menu.
+    void onExitSelection();
+
+    // New functions for Measure Water and Mix Water modes
+    void measureWaterMode();
+    void mixWaterMode();
+
+    static const int menuItems = 5;  // Five menu items: Tare, Calibrate, Read, Measure Water, Mix Water
     String menu[menuItems];
     int menuIndex;
-    int previousMenuIndex; 
+    int previousMenuIndex;
 
     DisplayUtils* displayUtils;
+
+    // Persist the calibration factor (0.0 means not calibrated yet)
+    float calibrationFactor;
 };
 
 } // namespace NuggetsInc

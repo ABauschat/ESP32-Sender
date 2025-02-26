@@ -13,7 +13,8 @@ enum class EventType {
     MOVE_DOWN,
     MOVE_LEFT,
     MOVE_RIGHT,
-    SELECT
+    SELECT,
+    BACK
 };
 
 struct Event {

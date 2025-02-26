@@ -13,7 +13,11 @@ ConnectWithRemote connectWithRemote;
 
 void setup() {
     Serial.begin(115200);
-    while (!Serial) { ; } 
+    //tunr on led
+    pinMode(2, OUTPUT);
+    digitalWrite(2, HIGH);
+    
+    Serial.println("Starting up...");
     NuggetsInc::GetMacAddress::begin();
     connectWithRemote.begin();
     NuggetsInc::HandleEvents::getInstance().setConnector(&connectWithRemote);
