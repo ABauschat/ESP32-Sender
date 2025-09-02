@@ -45,15 +45,15 @@ void MessageHandler::processAckMessage(const uint8_t* senderMac, const struct_me
 void MessageHandler::processCommandMessage(const uint8_t* senderMac, const struct_message& cmdMsg) {
     // For direct communication, all messages are for us
     if (!isDestinationForSelf(cmdMsg)) {
-        return; // Drop messages not for us
+        return; 
     }
     
-    // Drop duplicate commands for me: ACK but do not re-execute
     if (isDuplicateMessage(cmdMsg.SenderMac, cmdMsg.messageID)) {
-        if (nodeService_) {
-            nodeService_->sendAck(cmdMsg.messageID, cmdMsg.path);
-        }
         return;
+    }
+
+    if (nodeService_) {
+        nodeService_->sendAck(cmdMsg.messageID, cmdMsg.path);
     }
     
     switch (cmdMsg.commandID) {
@@ -65,11 +65,6 @@ void MessageHandler::processCommandMessage(const uint8_t* senderMac, const struc
         default:
             HandleEvents::getInstance().executeCommand(cmdMsg.commandID, cmdMsg.data);
             break;
-    }
-    
-    // Send ACK back to sender
-    if (nodeService_) {
-        nodeService_->sendAck(cmdMsg.messageID, cmdMsg.path);
     }
 }
 

@@ -244,7 +244,7 @@ bool MacAddressStorage::isValidMacAddress(const String& macAddress) {
         }
     }
 
-    //Check for duplicatev in storage
+    //Check for duplicate in storage
     for (const String& existingMac : macAddresses) {
         if (existingMac.equals(macAddress)) {
             return false;
