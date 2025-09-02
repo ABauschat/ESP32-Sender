@@ -24,7 +24,6 @@ public:
 private:
     DisplayUtils* displayUtils;
     static RelayState* activeInstance;
-    unsigned long lastSyncTime;
 };
 
 } // namespace NuggetsInc

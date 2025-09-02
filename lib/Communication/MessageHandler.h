@@ -18,16 +18,9 @@ class MessageHandler {
 public:
     MessageHandler(Router* router, NodeService* nodeService, Node* node = nullptr);
 
-    // Message processing
     void processReceivedMessage(const uint8_t* senderMac, const struct_message& msg);
-    
-    // ACK handling
     void processAckMessage(const uint8_t* senderMac, const struct_message& ackMsg);
-    
-    // Command message handling
     void processCommandMessage(const uint8_t* senderMac, const struct_message& cmdMsg);
-    
-    // Deduplication
     bool isDuplicateMessage(const uint8_t src[6], uint32_t messageID);
 
 private:

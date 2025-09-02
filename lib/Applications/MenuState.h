@@ -26,10 +26,6 @@ private:
     void onExitSelection();
     void setupMenu();
 
-    // UI event handling cooldown to suppress bounces and accidental double-presses
-    static constexpr uint32_t UI_COOLDOWN_MS = 140;
-    uint32_t lastHandledMs = 0;
-
     MenuService* menuService;
     static MenuState* activeInstance;
 };

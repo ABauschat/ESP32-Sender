@@ -18,7 +18,7 @@ namespace NuggetsInc
     RelayState *RelayState::activeInstance = nullptr;
 
     RelayState::RelayState()
-        : displayUtils(new DisplayUtils()), lastSyncTime(0)
+        : displayUtils(new DisplayUtils())
     {
     }
 
@@ -68,7 +68,6 @@ namespace NuggetsInc
     {
         MacAddressStorage &macStorage = MacAddressStorage::getInstance();
         macStorage.saveMacAddressList(macData);
-        lastSyncTime = now_ms();
 
         Serial.println("Mac Addresses Saved");
         Serial.flush();

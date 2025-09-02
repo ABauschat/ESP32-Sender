@@ -38,18 +38,6 @@ namespace NuggetsInc
     private:
         // Now using binary command identifiers.
         void sendCommand(::DisplayCommandID cmdID, const char *data = nullptr, bool nonBlocking = false, int maxRetries = -1);
-    private:
-        // Now using binary command identifiers.
-        void sendCommand(DisplayCommandID cmdID, const char *data = nullptr);
-        // Shared message ID fanout support
-        public:
-            // Begin a fanout group: returns the messageID to reuse across multiple recipients
-            static uint32_t beginFanoutGroup();
-            // End a fanout group
-            static void endFanoutGroup();
-        private:
-            static bool s_fanoutActive;
-            static uint32_t s_fanoutMsgId;
 
     };
 }

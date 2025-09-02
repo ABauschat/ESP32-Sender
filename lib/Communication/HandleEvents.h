@@ -35,9 +35,6 @@ private:
     ~HandleEvents();
 
     QueueHandle_t eventQueue;
-    // Simple per-button debounce tracking
-    static constexpr uint32_t DEBOUNCE_MS = 120; // ignore repeats within this window
-    uint32_t lastEventMs[6] = {0,0,0,0,0,0};
 };
 
 } // namespace NuggetsInc

@@ -38,7 +38,6 @@ MenuState* MenuState::activeInstance = nullptr;
             if (connector) {
                 connector->setRouteMode(Node::RouteMode::AUTO);
             }
-            
             menuService->drawMenu("Auto Mode");
         });
 
