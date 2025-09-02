@@ -87,10 +87,18 @@ bool MacAddressStorage::saveMacAddress(const String& macAddress) {
     return saveMacAddressesToFile();
 }
 
-bool MacAddressStorage::saveMacAddressList(const std::vector<String>& macList) {
+bool MacAddressStorage::saveMacAddressList(const char* macData) {
     // Clear existing addresses
     macAddresses.clear();
     
+    //split up mac adresses 
+    std::vector<String> macList;
+    char* token = strtok(const_cast<char*>(macData), ",");
+    while (token != nullptr) {
+        macList.push_back(String(token));
+        token = strtok(nullptr, ",");
+    }
+
     // Add new addresses (up to maximum)
     for (const String& macAddress : macList) {
         if (macAddresses.size() >= MAX_MAC_ADDRESSES) {
@@ -233,6 +241,13 @@ bool MacAddressStorage::isValidMacAddress(const String& macAddress) {
             if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))) {
                 return false;
             }
+        }
+    }
+
+    //Check for duplicatev in storage
+    for (const String& existingMac : macAddresses) {
+        if (existingMac.equals(macAddress)) {
+            return false;
         }
     }
     

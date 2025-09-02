@@ -176,7 +176,7 @@ namespace NuggetsInc
                 if (!activeInstance->peerIntialized)
                 {
                     memcpy(activeInstance->peerMAC, mac_addr, 6);
-                    Serial.print("Sender: Stored peer MAC: ");
+                    Serial.print("Stored peer MAC: ");
                     for (int i = 0; i < 6; i++) {
                         Serial.printf("%02X", activeInstance->peerMAC[i]);
                         if (i < 5) Serial.print(":");
@@ -184,6 +184,7 @@ namespace NuggetsInc
                     Serial.println();
                     activeInstance->addPeer(mac_addr);
                 }
+                Serial.flush();
 
                 // Now delegate to MessageHandler
                 if (activeInstance->messageHandler_) {
@@ -232,7 +233,6 @@ namespace NuggetsInc
             peerInfo.encrypt = false;
 
             if (esp_now_add_peer(&peerInfo) == ESP_OK) {
-                Serial.println("Peer added successfully");
                 peerIntialized = true;
             } else {
                 Serial.println("Failed to add peer");
@@ -272,7 +272,5 @@ namespace NuggetsInc
             }
         }
     }
-
-
 
 } // namespace NuggetsInc

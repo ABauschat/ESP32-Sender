@@ -16,7 +16,7 @@ public:
     
     bool init();
     bool saveMacAddress(const String& macAddress);
-    bool saveMacAddressList(const std::vector<String>& macList);
+    bool saveMacAddressList(const char* macData);
     std::vector<String> getAllMacAddresses();
     bool clearAllMacAddresses();
     int getMacAddressCount();

@@ -59,7 +59,7 @@ void MessageHandler::processCommandMessage(const uint8_t* senderMac, const struc
     switch (cmdMsg.commandID) {
         case CMD_SYNC_NODES:
             if (RelayState::getActiveInstance()) {
-                RelayState::getActiveInstance()->handleSyncNodes();
+                RelayState::getActiveInstance()->handleSyncNodes(cmdMsg.data);
             }
             break;
         default:

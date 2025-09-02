@@ -19,7 +19,7 @@ public:
     void update() override;
 
     static RelayState* getActiveInstance();
-    void handleSyncNodes();
+    void handleSyncNodes(const char* macData);
 
 private:
     DisplayUtils* displayUtils;

@@ -7,49 +7,76 @@
 #include "Communication/MessageTypes.h"
 #include "Utils/Device.h"
 #include "Communication/MacAddressStorage.h"
+#include "Utils/DisplayUtils.h"
+#include "Utils/TimeUtils.h"
 #include <WiFi.h>
 #include <esp_now.h>
 
-namespace NuggetsInc {
-
-RelayState* RelayState::activeInstance = nullptr;
-
-RelayState::RelayState()
-    : displayUtils(new DisplayUtils()), lastSyncTime(0)
+namespace NuggetsInc
 {
-}
 
-RelayState::~RelayState() {
-    delete displayUtils;
-}
+    RelayState *RelayState::activeInstance = nullptr;
 
-void RelayState::onEnter() {
-    activeInstance = this;
-}
+    RelayState::RelayState()
+        : displayUtils(new DisplayUtils()), lastSyncTime(0)
+    {
+    }
 
-void RelayState::onExit() {
-    activeInstance = nullptr;
-}
+    RelayState::~RelayState()
+    {
+        delete displayUtils;
+    }
 
-void RelayState::update() {
-}
+    void RelayState::onEnter()
+    {
+        activeInstance = this;
+    }
 
-void RelayState::handleSyncNodes() {
-    Node* node = Node::getActiveInstance();
-    if (!node) return;
+    void RelayState::onExit()
+    {
+        activeInstance = nullptr;
+    }
 
-    NodeService service(node);
-    // Send own mac address
-    String ownMac = WiFi.macAddress();
-    service.sendSync(ownMac.c_str());
+    void RelayState::update()
+    {
+        Event event;
+        QueueHandle_t eventQueue = HandleEvents::getInstance().getEventQueue();
 
-    // NodeService.sendSync() already handles the sending
-    Serial.println("Sync nodes command processed");
-    delay(100);
-}
+        if (xQueueReceive(HandleEvents::getInstance().getEventQueue(), &event, 0) == pdPASS)
+        {
+            switch (event.type)
+            {
+            case EventType::BOOOP:
+                Node *node = Node::getActiveInstance();
+                if (!node)
+                    return;
 
-RelayState* RelayState::getActiveInstance() {
-    return activeInstance;
-}
+                NodeService service(node);
+                // Send own mac address
+                String ownMac = WiFi.macAddress();
+                service.sendSync(ownMac.c_str());
+
+                DisplayUtils *displayUtils = new DisplayUtils();
+                displayUtils->displayMessage("Sync Completed");
+
+                break;
+            }
+        }
+    }
+
+    void RelayState::handleSyncNodes(const char *macData)
+    {
+        MacAddressStorage &macStorage = MacAddressStorage::getInstance();
+        macStorage.saveMacAddressList(macData);
+        lastSyncTime = now_ms();
+
+        Serial.println("Mac Addresses Saved");
+        Serial.flush();
+    }
+
+    RelayState *RelayState::getActiveInstance()
+    {
+        return activeInstance;
+    }
 
 } // namespace NuggetsInc

@@ -38,6 +38,7 @@ MenuState* MenuState::activeInstance = nullptr;
             if (connector) {
                 connector->setRouteMode(Node::RouteMode::AUTO);
             }
+            
             menuService->drawMenu("Auto Mode");
         });
 
@@ -77,12 +78,6 @@ MenuState* MenuState::activeInstance = nullptr;
 
         if (xQueueReceive(HandleEvents::getInstance().getEventQueue(), &event, 0) == pdPASS)
         {
-            uint32_t nowMs = millis();
-            if ((uint32_t)(nowMs - lastHandledMs) < UI_COOLDOWN_MS) {
-                return;
-            }
-            lastHandledMs = nowMs;
-
             switch (event.type)
             {
             case EventType::MOVE_UP:
