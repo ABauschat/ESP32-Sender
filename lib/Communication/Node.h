@@ -50,6 +50,7 @@ public:
 
 private:
     uint8_t peerMAC[6];
+    uint8_t selfMAC_[6];
     bool peerIntialized;
     static void onDataSentCallback(const uint8_t *mac_addr, esp_now_send_status_t status);
     static void onDataRecvCallback(const uint8_t *mac_addr, const uint8_t *incomingData, int len);

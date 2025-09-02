@@ -15,35 +15,30 @@ using namespace NuggetsInc; // For TimeUtils functions
 
 MessageHandler::MessageHandler(Router* router, NodeService* nodeService, Node* node)
     : router_(router), nodeService_(nodeService), node_(node) {}
-
+    
 void MessageHandler::processReceivedMessage(const uint8_t* senderMac, const struct_message& msg) {
-    // Null-terminate string fields
     struct_message receivedMessage = msg;
     receivedMessage.messageType[sizeof(receivedMessage.messageType) - 1] = '\0';
     receivedMessage.data[sizeof(receivedMessage.data) - 1] = '\0';
     receivedMessage.path[sizeof(receivedMessage.path) - 1] = '\0';
 
-    // Process ACK messages
+    
     if (strcmp(receivedMessage.messageType, "ack") == 0) {
         processAckMessage(senderMac, receivedMessage);
     }
-    // Process command messages
+    
     else if (strcmp(receivedMessage.messageType, "cmd") == 0) {
         processCommandMessage(senderMac, receivedMessage);
     }
 }
 
 void MessageHandler::processAckMessage(const uint8_t* senderMac, const struct_message& ackMsg) {
-    String prevHop = macToString(senderMac);
-
-    // Notify Node about ACK to release waiting semaphores
     if (node_) {
         node_->notifyAckReceived(ackMsg.messageID);
     }
 }
 
 void MessageHandler::processCommandMessage(const uint8_t* senderMac, const struct_message& cmdMsg) {
-    // For direct communication, all messages are for us
     if (!isDestinationForSelf(cmdMsg)) {
         return; 
     }
@@ -52,19 +47,15 @@ void MessageHandler::processCommandMessage(const uint8_t* senderMac, const struc
         return;
     }
 
-    if (nodeService_) {
-        nodeService_->sendAck(cmdMsg.messageID, cmdMsg.path);
-    }
-    
-    switch (cmdMsg.commandID) {
-        case CMD_SYNC_NODES:
-            if (RelayState::getActiveInstance()) {
-                RelayState::getActiveInstance()->handleSyncNodes(cmdMsg.data);
-            }
-            break;
-        default:
-            HandleEvents::getInstance().executeCommand(cmdMsg.commandID, cmdMsg.data);
-            break;
+    nodeService_->sendAck(cmdMsg.messageID, cmdMsg.path);
+
+    if(cmdMsg.commandID != CMD_SYNC_NODES) {
+        HandleEvents::getInstance().executeCommand(cmdMsg.commandID, cmdMsg.data);
+        return;
+    } 
+
+    if (RelayState::getActiveInstance()) {
+        RelayState::getActiveInstance()->handleSyncNodes(cmdMsg.data);
     }
 }
 
@@ -84,23 +75,11 @@ bool MessageHandler::isDuplicateMessage(const uint8_t src[6], uint32_t messageID
 }
 
 bool MessageHandler::isDestinationForSelf(const struct_message& msg) {
-    uint8_t selfMac[6];
-    setSelfMac(selfMac);
-    
-    bool destIsZero = isZeroMac(msg.destinationMac);
-    bool isDestination = destIsZero || memcmp(msg.destinationMac, selfMac, 6) == 0;
-    
-    return isDestination;
+    return isZeroMac(msg.destinationMac) || memcmp(msg.destinationMac, selfMAC_, 6) == 0;
 }
 
-void MessageHandler::setSelfMac(uint8_t out[6]) {
-    String macStr = WiFi.macAddress();
-    int b[6];
-    if (sscanf(macStr.c_str(), "%02x:%02x:%02x:%02x:%02x:%02x", &b[0], &b[1], &b[2], &b[3], &b[4], &b[5]) == 6) {
-        for (int i = 0; i < 6; i++) {
-            out[i] = (uint8_t)b[i];
-        }
-    }
+void MessageHandler::setSelfMac(uint8_t mac[6]) {
+    memcpy(selfMAC_, mac, 6);
 }
 
 bool MessageHandler::isZeroMac(const uint8_t mac[6]) {

@@ -28,10 +28,13 @@ namespace NuggetsInc
             Serial.println("Failed to create mutex for ackSemaphores");
         }
 
+        setSelfMac(selfMAC_);
+
         // Create delegated components
         router_ = new Router();
         NodeService* nodeService = new NodeService(this);
         messageHandler_ = new MessageHandler(router_, nodeService, this);
+        messageHandler_->setSelfMac(selfMAC_);
         routeMode_ = RouteMode::AUTO;
     }
 
@@ -248,7 +251,11 @@ namespace NuggetsInc
         static uint32_t nonBlockingCounter = 0x80000000u;
 
         msg.messageID = isBlocking ? blockingCounter++ : nonBlockingCounter++;
-        setSelfMac(msg.SenderMac);
+        
+        // Set sender MAC
+        memcpy(msg.SenderMac, selfMAC_, 6);
+
+        // Clear destination MAC and path
         memset(msg.destinationMac, 0, sizeof(msg.destinationMac));
         msg.path[0] = '\0';
     }

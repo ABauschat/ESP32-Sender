@@ -22,11 +22,13 @@ public:
     void processAckMessage(const uint8_t* senderMac, const struct_message& ackMsg);
     void processCommandMessage(const uint8_t* senderMac, const struct_message& cmdMsg);
     bool isDuplicateMessage(const uint8_t src[6], uint32_t messageID);
+    void setSelfMac(uint8_t mac[6]);
 
 private:
     Router* router_;
     NodeService* nodeService_;
     Node* node_;
+    uint8_t selfMAC_[6];
 
     // Deduplication cache
     struct MsgKey { 
@@ -41,8 +43,6 @@ private:
     };
     std::map<MsgKey, msec32, MsgKeyCmp> recentMsgCache_;
 
-    // Helper functions
-    void setSelfMac(uint8_t out[6]);
     bool isZeroMac(const uint8_t mac[6]);
     String macToString(const uint8_t mac[6]);
     bool stringToMac(const String& s, uint8_t out[6]);
