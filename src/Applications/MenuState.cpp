@@ -106,6 +106,10 @@ MenuState* MenuState::activeInstance = nullptr;
     void MenuState::onExitSelection()
     {
         menuService->drawMenu();
+        Node* connector = Node::getActiveInstance();
+        if (connector) {
+            connector->setRouteMode(Node::RouteMode::AUTO);
+        }
     }
 
     MenuState* MenuState::getActiveInstance() {

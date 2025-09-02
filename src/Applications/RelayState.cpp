@@ -56,9 +56,7 @@ namespace NuggetsInc
                 String ownMac = WiFi.macAddress();
                 service.sendSync(ownMac.c_str());
 
-                DisplayUtils *displayUtils = new DisplayUtils();
                 displayUtils->displayMessage("Sync Completed");
-
                 break;
             }
         }
