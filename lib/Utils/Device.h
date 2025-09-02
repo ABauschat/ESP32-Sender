@@ -1,6 +1,12 @@
 // Colors.h
-#ifndef COLORS_H
-#define COLORS_H
+#ifndef DEVICE_H
+#define DEVICE_H
+
+#define SCREEN_WIDTH   536
+#define SCREEN_HEIGHT  220
+
+#define DeviceName     "Nuggets Inc. Node"
+#define DeviceVersion  "1.0.0"
 
 // Define colors using RGB565 format
 #define COLOR_ORANGE       0xFD20 // Example RGB565 value for orange
@@ -12,4 +18,6 @@
 #define COLOR_BLUE         0x001F // RGB565 blue
 #define COLOR_YELLOW       0xFFE0 // RGB565 yellow
 
-#endif // COLORS_H
+#endif //DEVICE_H
+
+

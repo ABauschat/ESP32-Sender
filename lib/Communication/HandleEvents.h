@@ -1,4 +1,3 @@
-// HandleEvents.h
 #ifndef HANDLE_EVENTS_H
 #define HANDLE_EVENTS_H
 
@@ -14,38 +13,31 @@ enum class EventType {
     MOVE_LEFT,
     MOVE_RIGHT,
     SELECT,
-    BACK
+    BACK,
+    BOOOP
 };
 
 struct Event {
     EventType type;
 };
 
-class ConnectWithRemote; // Forward declaration
+class Node; // Forward declaration
 
 class HandleEvents
 {
 public:
     static HandleEvents& getInstance();
-
-    void processCommand(const char* command, const char* data);
-
-    void setConnector(ConnectWithRemote* connector);
-
     QueueHandle_t getEventQueue();
-
-    void clearEvents();
+    void executeCommand(uint8_t commandID, const char* data);
 
 private:
     HandleEvents();
     ~HandleEvents();
-    HandleEvents(const HandleEvents&) = delete;
-    HandleEvents& operator=(const HandleEvents&) = delete;
 
-    void executeCommand(const char* command, const char* data);
-
-    ConnectWithRemote* connectWithRemote;
     QueueHandle_t eventQueue;
+    // Simple per-button debounce tracking
+    static constexpr uint32_t DEBOUNCE_MS = 120; // ignore repeats within this window
+    uint32_t lastEventMs[6] = {0,0,0,0,0,0};
 };
 
 } // namespace NuggetsInc
